@@ -4,13 +4,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" hgap="10" vgap="10"
+<?import javafx.scene.text.Font?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" hgap="10" vgap="10" fx:id="container"
           xmlns="http://javafx.com/javafx/10.0.2-internal">
     <padding>
         <Insets bottom="25" left="25" right="25" top="25"/>
     </padding>
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Text text="Inventory Management System"/>
+        <Label text="Inventory Management System">
+                <font>
+                    <Font size="25.0" />
+                </font>
+        </Label>
     </HBox>
     <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_LEFT" prefWidth="500" GridPane.columnIndex="0"
               GridPane.rowIndex="1" hgap="10"
@@ -18,7 +24,11 @@
         <padding>
             <Insets bottom="10" left="10" right="10" top="25"/>
         </padding>
-        <Text text="Parts" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+        <Label text="Parts" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </Label>
         <TextField fx:id="partsQueryField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
         <Button fx:id="partsSearchButton" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
         <TableView GridPane.hgrow="ALWAYS" minWidth="500" GridPane.columnIndex="0" GridPane.columnSpan="4"
@@ -45,7 +55,11 @@
         <padding>
             <Insets bottom="10" left="10" right="10" top="25"/>
         </padding>
-        <Text text="Products" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+        <Label text="Products" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
         <TextField fx:id="productsQueryField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
         <Button fx:id="productsSearchButton" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
         <TableView GridPane.hgrow="ALWAYS" minWidth="500" GridPane.columnIndex="0" GridPane.columnSpan="4"

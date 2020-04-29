@@ -20,7 +20,7 @@ abstract public class ProductScreen {
     protected final ObservableList<Part> parts;
     protected final ObservableList<Product> products;
     @FXML
-    protected Button cancelButton, saveButton, partsSearchButton, addPartButton;
+    protected Button cancelButton, saveButton, partsSearchButton, addPartButton, deleteAssociatedPartButton;
     @FXML
     protected Text title;
     @FXML
@@ -60,6 +60,10 @@ abstract public class ProductScreen {
         initBindings();
         // Prohibit nonsensical input into text fields
         initInputMasks();
+        // grey out Add button when there's no selection
+        addPartButton.disableProperty().bind(Bindings.isNull(partsSearchTableView.getSelectionModel().selectedItemProperty()));
+        // grey out Delete button when there's no selection
+        deleteAssociatedPartButton.disableProperty().bind(Bindings.isNull(associatedPartsTableView.getSelectionModel().selectedItemProperty()));
     }
 
     private void initBindings() {

@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.InHouse;
 import model.Part;
@@ -23,6 +24,8 @@ import java.util.Optional;
 import static javafx.stage.Modality.APPLICATION_MODAL;
 
 public class Controller {
+    @FXML
+    private GridPane container;
     @FXML
     private Button addPartButton, modifyPartButton, addProductButton, modifyProductButton, deletePartButton, deleteProductButton;
     private ObservableList<Product> products;
@@ -219,7 +222,7 @@ public class Controller {
         Optional<ButtonType> a = Alert.confirm("This will exit the program.");
         a.ifPresent(x -> {
             if(x == ButtonType.OK)
-                System.exit(1);
+                System.exit(0);
         });
     }
 
