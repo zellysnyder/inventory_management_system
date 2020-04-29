@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,13 +23,9 @@ import java.util.Optional;
 import static javafx.stage.Modality.APPLICATION_MODAL;
 
 public class Controller {
-    // products table
-    private final ArrayList<Product> products;
-    // parts table
-    private final ArrayList<Part> parts;
     @FXML
     private Button addPartButton, modifyPartButton, addProductButton, modifyProductButton, deletePartButton, deleteProductButton;
-    private ObservableList<Product> products_;
+    private ObservableList<Product> products;
     @FXML
     private TableView<Product> productsTableView;
     @FXML
@@ -43,7 +40,7 @@ public class Controller {
     private TableColumn<Product, Integer> productInventoryLevelColumn;
     @FXML
     private TableColumn<Product, Double> productPriceColumn;
-    private ObservableList<Part> parts_;
+    private ObservableList<Part> parts;
     @FXML
     private TableView<Part> partsTableView;
     @FXML
@@ -60,10 +57,8 @@ public class Controller {
     private TableColumn<Part, Double> partPriceColumn;
 
     public Controller(ArrayList<Part> parts, ArrayList<Product> products) {
-        this.parts = parts;
-        this.parts_ = FXCollections.observableArrayList(parts);
-        this.products_ = FXCollections.observableArrayList(products);
-        this.products = products;
+        this.parts = FXCollections.observableArrayList(parts);
+        this.products = FXCollections.observableArrayList(products);
     }
 
     @FXML
@@ -75,7 +70,7 @@ public class Controller {
         productInventoryLevelColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
         productPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         // configure search results
-        FilteredList<Product> productSearchResults = new FilteredList<>(this.products_);
+        FilteredList<Product> productSearchResults = new FilteredList<>(this.products);
         productsTableView.setItems(productSearchResults);
         productsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         // filter search results to query
@@ -101,7 +96,7 @@ public class Controller {
         partInventoryLevelColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
         partPriceColumn.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
         // configure search results
-        FilteredList<Part> partSearchResults = new FilteredList<>(this.parts_);
+        FilteredList<Part> partSearchResults = new FilteredList<>(this.parts);
         partsTableView.setItems(partSearchResults);
         partsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         // filter search results to query
@@ -118,6 +113,14 @@ public class Controller {
         partsQueryField.textProperty().addListener((observableValue, s, t1) -> {
             handlePartSearch.run();
         });
+
+        // grey out the Modify and Delete buttons if nothing is selected
+        // for the parts table...
+        modifyPartButton.disableProperty().bind(Bindings.isNull(partsTableView.getSelectionModel().selectedItemProperty()));
+        deletePartButton.disableProperty().bind(Bindings.isNull(partsTableView.getSelectionModel().selectedItemProperty()));
+        // for the products tale...
+        modifyProductButton.disableProperty().bind(Bindings.isNull(productsTableView.getSelectionModel().selectedItemProperty()));
+        deleteProductButton.disableProperty().bind(Bindings.isNull(productsTableView.getSelectionModel().selectedItemProperty()));
     }
 
     private void launchProductWindow(ProductScreen screenController) {
@@ -162,7 +165,7 @@ public class Controller {
         confirmation.ifPresent(a -> {
             if (a == ButtonType.OK) {
                 getSelectedPart().ifPresent((Part p) -> {
-                    this.parts_.remove(p);
+                    this.parts.remove(p);
                 });
             }
         });
@@ -176,7 +179,7 @@ public class Controller {
         confirmation.ifPresent(a -> {
             if (a == ButtonType.OK) {
                 getSelectedProduct().ifPresent((Product p) -> {
-                    this.products_.remove(p);
+                    this.products.remove(p);
                 });
             }
         });
@@ -185,29 +188,29 @@ public class Controller {
     @FXML
     private void modifyProduct() {
         getSelectedProduct().ifPresent((Product p) -> {
-            int idx = this.products_.indexOf(p);
+            int idx = this.products.indexOf(p);
             if (idx != -1)
-                launchProductWindow(new ModifyProductScreen(this.products_, this.parts_, idx));
+                launchProductWindow(new ModifyProductScreen(this.products, this.parts, idx));
         });
     }
 
     @FXML
     private void addProduct() {
-        launchProductWindow(new AddProductScreen(this.products_, this.parts_));
+        launchProductWindow(new AddProductScreen(this.products, this.parts));
     }
 
     @FXML
     private void modifyPart() {
         getSelectedPart().ifPresent((Part p) -> {
-            int idx = this.parts_.indexOf(p);
+            int idx = this.parts.indexOf(p);
             if (idx != -1)
-                launchPartWindow(new ModifyPartScreen(this.parts_, idx));
+                launchPartWindow(new ModifyPartScreen(this.parts, idx));
         });
     }
 
     @FXML
     private void addPart() {
-        launchPartWindow(new AddPartScreen(this.parts_, new InHouse("", 0.0, 0, 0, 0, 0)));
+        launchPartWindow(new AddPartScreen(this.parts, new InHouse("", 0.0, 0, 0, 0, 0)));
         ;
     }
 
