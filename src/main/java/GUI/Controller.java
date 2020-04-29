@@ -221,7 +221,7 @@ public class Controller {
     private void exitProgram() {
         Optional<ButtonType> a = Alert.confirm("This will exit the program.");
         a.ifPresent(x -> {
-            if(x == ButtonType.OK)
+            if (x == ButtonType.OK)
                 System.exit(0);
         });
     }

@@ -3,9 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
-
 <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" hgap="10" vgap="10" fx:id="container"
           xmlns="http://javafx.com/javafx/10.0.2-internal">
     <padding>
@@ -13,9 +11,9 @@
     </padding>
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Label text="Inventory Management System">
-                <font>
-                    <Font size="25.0" />
-                </font>
+            <font>
+                <Font size="25.0"/>
+            </font>
         </Label>
     </HBox>
     <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_LEFT" prefWidth="500" GridPane.columnIndex="0"
@@ -57,7 +55,7 @@
         </padding>
         <Label text="Products" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
             <font>
-                <Font size="15.0" />
+                <Font size="15.0"/>
             </font>
         </Label>
         <TextField fx:id="productsQueryField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
