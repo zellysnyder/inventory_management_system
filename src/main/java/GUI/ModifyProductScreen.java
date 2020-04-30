@@ -39,7 +39,7 @@ public class ModifyProductScreen extends ProductScreen {
                 setUnderlyingProductModel(p);
                 closeModalImpl();
             }
-        } catch (ProductPriceException | ProductPartCountException | ZeroStockException | InventoryBoundsException | MinMaxMismatchException e) {
+        } catch (ProductPriceException | ProductPartCountException | InventoryBoundsException | MinMaxMismatchException | MissingPriceException | MissingNameException | MissingInventoryNumberException e) {
             Alert.display(e.getMessage());
         }
     }

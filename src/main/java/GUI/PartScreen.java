@@ -6,12 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
 import model.InHouse;
 import model.Outsourced;
 import model.Part;
 
-import java.text.NumberFormat;
 import java.util.Optional;
 
 public abstract class PartScreen {
@@ -106,10 +104,10 @@ public abstract class PartScreen {
         // grey out the Save button if the part is blank
         saveButton.disableProperty().bind(Bindings.isEmpty(nameField.textProperty()));
         Bindings.bindBidirectional(nameField.textProperty(), thisPart.nameProperty());
-        Bindings.bindBidirectional(inventoryField.textProperty(), thisPart.stockProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(inventoryField.textProperty(), thisPart.stockProperty(), FormattedTextFields.integerStringConverter);
         Bindings.bindBidirectional(priceField.textProperty(), thisPart.priceProperty(), FormattedTextFields.doubleStringConverter);
-        Bindings.bindBidirectional(minField.textProperty(), thisPart.minProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
-        Bindings.bindBidirectional(maxField.textProperty(), thisPart.maxProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(minField.textProperty(), thisPart.minProperty(), FormattedTextFields.integerStringConverter);
+        Bindings.bindBidirectional(maxField.textProperty(), thisPart.maxProperty(), FormattedTextFields.integerStringConverter);
     }
 
     private void deinitDataBindings() {
@@ -138,7 +136,7 @@ public abstract class PartScreen {
     protected void initBindingsForInHouse() {
         final Part p = getPartModel();
         if (p instanceof InHouse)
-            Bindings.bindBidirectional(machineIdField.textProperty(), ((InHouse) p).machineIdProperty(), new NumberStringConverter());
+            Bindings.bindBidirectional(machineIdField.textProperty(), ((InHouse) p).machineIdProperty(), FormattedTextFields.integerStringConverter);
     }
 
     protected void deinitBindingsForInHouse() {
@@ -162,14 +160,34 @@ public abstract class PartScreen {
     @FXML
     protected abstract void save();
 
-    protected void checkInventory() throws InventoryBoundsException, ZeroStockException, MinMaxMismatchException {
-        // J.  Write code to implement exception controls with custom error messages for one requirement out of each of the following sets (pick one from each):
-        // - entering an inventory value that exceeds the minimum or maximum value for that part or product
+    /**
+     * Implement several validations (section "J" Set 1 in Requirements)
+     * - preventing the minimum field from having a value above the maximum field
+     * - preventing the maximum field from having a value below the minimum field
+     * - entering an inventory value that exceeds the minimum or maximum value for that part or product
+     *
+     * @throws InventoryBoundsException
+     * @throws ZeroStockException
+     * @throws MinMaxMismatchException
+     * @throws MissingInventoryNumberException
+     * @throws MissingPriceException
+     * @throws MissingNameException
+     */
+    protected void checkInventory() throws InventoryBoundsException, ZeroStockException, MinMaxMismatchException, MissingInventoryNumberException, MissingPriceException, MissingNameException {
         final Part p = getPartModel();
+        if (nameField.getText().isEmpty() || p.getName().isEmpty())
+            throw new MissingNameException("You must enter a name for this part");
+        if (priceField.getText().isEmpty() || Double.isNaN(p.getPrice()))
+            throw new MissingPriceException("You must enter a price for this part");
+        if (inventoryField.getText().isEmpty())
+            throw new MissingInventoryNumberException("You must enter an inventory stock count.");
         if (p.getStock() == 0)
             throw new ZeroStockException();
+        // preventing the minimum field from having a value above the maximum field
+        // preventing the maximum field from having a value below the minimum field
         if (!Part.hasSaneMinMaxValues(p))
             throw new MinMaxMismatchException(p.getMin(), p.getMax());
+        // entering an inventory value that exceeds the minimum or maximum value for that part or product
         if (!Part.hasSaneInventoryValues(p))
             throw new InventoryBoundsException(String.format("Stock amount (%d) must be at least the minimum (%d) and no more than the maximum (%d)", p.getStock(), p.getMin(), p.getMax()));
     }
@@ -197,5 +215,14 @@ public abstract class PartScreen {
 
     protected boolean isOutsourced() {
         return getPartModel() instanceof Outsourced;
+    }
+
+    @Override
+    protected void finalize() {
+        deinitDataBindings();
+        if (getPartModel() instanceof Outsourced)
+            deinitBindingsForOutsourced();
+        if (getPartModel() instanceof InHouse)
+            deinitBindingsForInHouse();
     }
 }

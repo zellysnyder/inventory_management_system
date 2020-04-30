@@ -40,7 +40,7 @@ public class AddPartScreen extends PartScreen {
                 allParts.add(p);
                 closeModalImpl();
             }
-        } catch (InventoryBoundsException | ZeroStockException | MinMaxMismatchException e) {
+        } catch (InventoryBoundsException | ZeroStockException | MinMaxMismatchException | MissingNameException | MissingPriceException | MissingInventoryNumberException e) {
             Alert.display(e.getMessage());
         }
     }

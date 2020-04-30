@@ -35,7 +35,7 @@ public class AddProductScreen extends ProductScreen {
                 this.products.add(p);
                 closeModalImpl();
             }
-        } catch (ProductPriceException | ProductPartCountException | ZeroStockException | InventoryBoundsException | MinMaxMismatchException e) {
+        } catch (ProductPriceException | ProductPartCountException | InventoryBoundsException | MinMaxMismatchException | MissingInventoryNumberException | MissingPriceException | MissingNameException e) {
             Alert.display(e.getMessage());
         }
     }

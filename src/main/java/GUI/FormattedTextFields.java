@@ -14,6 +14,22 @@ public class FormattedTextFields {
         return c.getControlNewText().matches("^[0-9]*(?:\\.[0-9]{0,2})?$") ? c : null;
     };
 
+    public static StringConverter<Number> integerStringConverter = new StringConverter<Number>() {
+        @Override
+        public String toString(Number number) {
+            return number.toString();
+        }
+
+        @Override
+        public Number fromString(String s) {
+            try {
+                return Integer.valueOf(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+    };
+
     public static StringConverter<Number> doubleStringConverter = new StringConverter<Number>() {
         @Override
         public String toString(Number n) {

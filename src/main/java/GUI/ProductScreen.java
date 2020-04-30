@@ -9,11 +9,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
 import model.Part;
 import model.Product;
 
-import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -73,9 +71,9 @@ abstract public class ProductScreen {
         saveButton.disableProperty().bind(Bindings.isEmpty(productNameField.textProperty()));
         Bindings.bindBidirectional(productNameField.textProperty(), p.nameProperty());
         Bindings.bindBidirectional(priceField.textProperty(), p.priceProperty(), FormattedTextFields.doubleStringConverter);
-        Bindings.bindBidirectional(invField.textProperty(), p.stockProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
-        Bindings.bindBidirectional(minField.textProperty(), p.minProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
-        Bindings.bindBidirectional(maxField.textProperty(), p.maxProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(invField.textProperty(), p.stockProperty(), FormattedTextFields.integerStringConverter);
+        Bindings.bindBidirectional(minField.textProperty(), p.minProperty(), FormattedTextFields.integerStringConverter);
+        Bindings.bindBidirectional(maxField.textProperty(), p.maxProperty(), FormattedTextFields.integerStringConverter);
     }
 
     private void deinitBindings() {
@@ -125,20 +123,48 @@ abstract public class ProductScreen {
 
     protected abstract void save();
 
-    protected void checkInventory() throws ProductPartCountException, ZeroStockException, InventoryBoundsException, MinMaxMismatchException {
-        // J.  Write code to implement exception controls with custom error messages for one requirement out of each of the following sets (pick one from each):
-        // - ensuring that a product must always have at least one part
+    /**
+     * Implement several validations (section "J" Set 1 in Requirements)
+     * - preventing the minimum field from having a value above the maximum field
+     * - preventing the maximum field from having a value below the minimum field
+     * - ensuring that a product must always have at least one part
+     * - ensuring that a product must have a name, price, and inventory level (default 0)
+     * - entering an inventory value that exceeds the minimum or maximum value for that part or product
+     *
+     * @throws ProductPartCountException
+     * @throws InventoryBoundsException
+     * @throws MinMaxMismatchException
+     * @throws MissingNameException
+     * @throws MissingPriceException
+     * @throws MissingInventoryNumberException
+     */
+    protected void checkInventory() throws ProductPartCountException, InventoryBoundsException, MinMaxMismatchException, MissingNameException, MissingPriceException, MissingInventoryNumberException {
         final Product p = getProductModel();
-        if (p.getStock() == 0)
-            throw new ZeroStockException();
+        // ensuring that a product must have a name, price, and inventory level (default 0)
+        if (productNameField.getText().isEmpty() || p.getName().isEmpty())
+            throw new MissingNameException("You must enter a name for this product.");
+        if (priceField.getText().isEmpty() || Double.isNaN(p.getPrice()) || p.getPrice() == 0.0)
+            throw new MissingPriceException("You must enter a price for this product. It can't be free.");
+        if (invField.getText().isEmpty())
+            throw new MissingInventoryNumberException("You must enter an inventory stock count.");
+        // preventing the minimum field from having a value above the maximum field
+        // preventing the maximum field from having a value below the minimum field
         if (!Product.hasSaneMinMaxValues(p))
             throw new MinMaxMismatchException(p.getMin(), p.getMax());
+        // ensuring that a product must always have at least one part
         if (p.getAllAssociatedParts().size() < 1)
             throw new ProductPartCountException("There must be at least one part associated with the product");
+        // entering an inventory value that exceeds the minimum or maximum value for that part or product
         if (!Product.hasSaneInventoryValues(p))
             throw new InventoryBoundsException(String.format("Stock amount (%d) must be at least the minimum (%d) and no more than the maximum (%d)", p.getStock(), p.getMin(), p.getMax()));
     }
 
+    /**
+     * Implement a validation from Section "J" Set 2:
+     * - ensuring that the price of a product cannot be less than the cost of the parts
+     *
+     * @throws ProductPriceException
+     */
     protected void checkProductPrice() throws ProductPriceException {
         // J.  Write code to implement exception controls with custom error messages for one requirement out of each of the following sets (pick one from each):
         //  ensuring that the price of a product cannot be less than the cost of the parts
