@@ -2,6 +2,8 @@ package GUI;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import model.InHouse;
+import model.Outsourced;
 import model.Part;
 
 public class ModifyPartScreen extends PartScreen {
@@ -11,7 +13,9 @@ public class ModifyPartScreen extends PartScreen {
     public ModifyPartScreen(ObservableList<Part> allParts, int index) {
         super(allParts);
         this.index = index;
-        this.part = allParts.get(index);
+        // operate on a defensive copy so that the Part in the underlying data store is not modified until validation has occurred (i.e., in the `save` method)
+        final Part p = allParts.get(index);
+        this.part = Part.copy(p);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class ModifyPartScreen extends PartScreen {
     }
 
     /**
-     * Validate the temporary Part object, then commit it to the underlying data model
+     * Validate the defensively-copied Part object, then commit it to the underlying data model
      */
     @FXML
     @Override

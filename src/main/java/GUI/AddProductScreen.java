@@ -14,6 +14,7 @@ public class AddProductScreen extends ProductScreen {
 
     public AddProductScreen(ObservableList<Product> products, ObservableList<Part> parts) {
         super(products, parts);
+        // operate on a brand new Product type
         this.product = new Product("", 0.0, 0, 0, 0);
     }
 

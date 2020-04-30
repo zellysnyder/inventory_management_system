@@ -2,6 +2,8 @@ package model;
 
 import javafx.beans.property.*;
 
+import java.lang.reflect.Constructor;
+
 public abstract class Part implements IndexedById {
     /// IdSequence holds the highest auto-incrementing number
     private static int IdSequence = 0;
@@ -12,7 +14,7 @@ public abstract class Part implements IndexedById {
     private IntegerProperty min = new SimpleIntegerProperty();
     private IntegerProperty max = new SimpleIntegerProperty();
 
-    public Part(int id, String name, double price, int stock, int min, int max) {
+    protected Part(int id, String name, double price, int stock, int min, int max) {
         // update auto-incremented id to highest value
         if (id > IdSequence) {
             IdSequence = id;
@@ -27,6 +29,26 @@ public abstract class Part implements IndexedById {
 
     protected Part(String name, double price, int stock, int min, int max) {
         this(GenerateId(), name, price, stock, min, max);
+    }
+
+    /**
+     * Invoke the copy constructor of a subclass using Java reflection. Panics at runtime if the subclasses do not have copy constructors; i.e., `public Part(Part part)`
+     * @param src Part type to copy from
+     * @return new Part type
+     */
+    public static Part copy(final Part src) {
+        try {
+            Class<? extends Part> c = src.getClass();
+            Constructor<? extends Part> ctor = c.getDeclaredConstructor(c);
+            ctor.setAccessible(true);
+            return ctor.newInstance(src);
+        } catch (Exception e) {
+            // This shouldn't happen if the subclasses have copy constructors
+            e.printStackTrace();
+            // panic
+            System.exit(1);
+        }
+        return null;
     }
 
     private static int GenerateId() {

@@ -22,13 +22,13 @@ public class Main extends Application {
     }};
 
     private static ArrayList<Product> testProducts = new ArrayList<Product>() {{
-        add(new Product(1, "Product #1", 10.0, 20, 10, 100) {{
+        add(new Product("Product #1", 10.0, 20, 10, 100) {{
             addAssociatedPart(testParts.get(0));
         }});
-        add(new Product(2, "Product #2", 10.0, 20, 10, 100) {{
+        add(new Product("Product #2", 10.0, 20, 10, 100) {{
             addAssociatedPart(testParts.get(1), testParts.get(2));
         }});
-        add(new Product(3, "Product #3", 10.0, 20, 10, 100) {{
+        add(new Product("Product #3", 10.0, 20, 10, 100) {{
             addAssociatedPart(testParts.get(0), testParts.get(2));
         }});
     }};

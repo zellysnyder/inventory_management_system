@@ -16,6 +16,14 @@ public class Outsourced extends Part {
         this.companyName.set(companyName);
     }
 
+    /**
+     * Copy constructor
+     * @param p Other part object to copy from
+     */
+    public Outsourced(final Outsourced p) {
+        this(p.getId(), p.getName(), p.getPrice(), p.getStock(), p.getMin(), p.getMax(), p.getCompanyName());
+    }
+
     public String getCompanyName() {
         return companyName.get();
     }

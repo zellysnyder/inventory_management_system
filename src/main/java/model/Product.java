@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.lang.reflect.Constructor;
+
 public class Product implements IndexedById {
     /// Auto-incremented ID counter
     private static int IdSequence = 0;
@@ -15,7 +17,7 @@ public class Product implements IndexedById {
     private IntegerProperty min = new SimpleIntegerProperty();
     private IntegerProperty max = new SimpleIntegerProperty();
 
-    public Product(int id, String name, double price, int stock, int min, int max) {
+    private Product(int id, String name, double price, int stock, int min, int max) {
         this.id = id;
         if (IdSequence < id) {
             // update auto-increment counter to highest value
@@ -30,6 +32,17 @@ public class Product implements IndexedById {
 
     public Product(String name, double price, int stock, int min, int max) {
         this(GenerateId(), name, price, stock, min, max);
+    }
+
+    /**
+     * Copy constructor
+     * @param p Product to copy from
+     */
+    public Product(final Product p) {
+        this(p.getId(), p.getName(), p.getPrice(), p.getStock(), p.getMin(), p.getMax());
+        for (final Part part : p.getAllAssociatedParts()) {
+            this.addAssociatedPart(part);
+        }
     }
 
     public static int GenerateId() {

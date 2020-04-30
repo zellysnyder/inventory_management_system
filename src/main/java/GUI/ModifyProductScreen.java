@@ -12,7 +12,10 @@ public class ModifyProductScreen extends ProductScreen {
     public ModifyProductScreen(ObservableList<Product> products, ObservableList<Part> parts, int index) {
         super(products, parts);
         this.index = index;
-        this.product = products.get(index);
+        // operate on a defensive copy of the Product
+        // so that this does not write to the underlying data store pre-emptively
+        final Product p = products.get(index);
+        this.product = new Product(p);
     }
 
     @FXML

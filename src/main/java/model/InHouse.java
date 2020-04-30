@@ -16,6 +16,14 @@ public class InHouse extends Part {
         this.machineId.set(machineId);
     }
 
+    /**
+     * Copy constructor
+     * @param p Other part object to copy from
+     */
+    public InHouse(final InHouse p) {
+        this(p.getId(), p.getName(), p.getPrice(), p.getStock(), p.getMin(), p.getMax(), p.getMachineId());
+    }
+
     public int getMachineId() {
         return this.machineId.get();
     }
