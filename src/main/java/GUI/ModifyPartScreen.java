@@ -2,8 +2,6 @@ package GUI;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import model.InHouse;
-import model.Outsourced;
 import model.Part;
 
 public class ModifyPartScreen extends PartScreen {

@@ -18,6 +18,7 @@ public class InHouse extends Part {
 
     /**
      * Copy constructor
+     *
      * @param p Other part object to copy from
      */
     public InHouse(final InHouse p) {

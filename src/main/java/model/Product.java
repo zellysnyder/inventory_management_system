@@ -4,8 +4,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.lang.reflect.Constructor;
-
 public class Product implements IndexedById {
     /// Auto-incremented ID counter
     private static int IdSequence = 0;
@@ -36,6 +34,7 @@ public class Product implements IndexedById {
 
     /**
      * Copy constructor
+     *
      * @param p Product to copy from
      */
     public Product(final Product p) {

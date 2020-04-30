@@ -33,6 +33,7 @@ public abstract class Part implements IndexedById {
 
     /**
      * Invoke the copy constructor of a subclass using Java reflection. Panics at runtime if the subclasses do not have copy constructors; i.e., `public Part(Part part)`
+     *
      * @param src Part type to copy from
      * @return new Part type
      */

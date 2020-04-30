@@ -18,6 +18,7 @@ public class Outsourced extends Part {
 
     /**
      * Copy constructor
+     *
      * @param p Other part object to copy from
      */
     public Outsourced(final Outsourced p) {
