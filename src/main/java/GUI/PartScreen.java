@@ -11,6 +11,7 @@ import model.InHouse;
 import model.Outsourced;
 import model.Part;
 
+import java.text.NumberFormat;
 import java.util.Optional;
 
 public abstract class PartScreen {
@@ -105,10 +106,10 @@ public abstract class PartScreen {
         // grey out the Save button if the part is blank
         saveButton.disableProperty().bind(Bindings.isEmpty(nameField.textProperty()));
         Bindings.bindBidirectional(nameField.textProperty(), thisPart.nameProperty());
-        Bindings.bindBidirectional(inventoryField.textProperty(), thisPart.stockProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(priceField.textProperty(), thisPart.priceProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(minField.textProperty(), thisPart.minProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(maxField.textProperty(), thisPart.maxProperty(), new NumberStringConverter());
+        Bindings.bindBidirectional(inventoryField.textProperty(), thisPart.stockProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(priceField.textProperty(), thisPart.priceProperty(), FormattedTextFields.doubleStringConverter);
+        Bindings.bindBidirectional(minField.textProperty(), thisPart.minProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(maxField.textProperty(), thisPart.maxProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
     }
 
     private void deinitDataBindings() {

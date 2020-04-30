@@ -13,6 +13,7 @@ import javafx.util.converter.NumberStringConverter;
 import model.Part;
 import model.Product;
 
+import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -71,10 +72,10 @@ abstract public class ProductScreen {
         idField.setText(Integer.toString(p.getId()));
         saveButton.disableProperty().bind(Bindings.isEmpty(productNameField.textProperty()));
         Bindings.bindBidirectional(productNameField.textProperty(), p.nameProperty());
-        Bindings.bindBidirectional(priceField.textProperty(), p.priceProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(invField.textProperty(), p.stockProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(minField.textProperty(), p.minProperty(), new NumberStringConverter());
-        Bindings.bindBidirectional(maxField.textProperty(), p.maxProperty(), new NumberStringConverter());
+        Bindings.bindBidirectional(priceField.textProperty(), p.priceProperty(), FormattedTextFields.doubleStringConverter);
+        Bindings.bindBidirectional(invField.textProperty(), p.stockProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(minField.textProperty(), p.minProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
+        Bindings.bindBidirectional(maxField.textProperty(), p.maxProperty(), new NumberStringConverter(NumberFormat.getIntegerInstance()));
     }
 
     private void deinitBindings() {
